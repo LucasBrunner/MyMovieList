@@ -34,11 +34,12 @@ class MainActivity : AppCompatActivity() {
     fun changeFragment(fragment: MovieFragment) {
         if (currentFragment != fragment) {
             currentFragment = fragment
-            setContent(when (fragment) {
-                MovieFragment.SEARCH -> movieSearch
-                MovieFragment.HISTORY -> movieHistory
-                MovieFragment.PLAN -> moviePlan
-            })
+            navbar.updateTint(fragment)
+            when (fragment) {
+                MovieFragment.SEARCH -> setContent(movieSearch)
+                MovieFragment.HISTORY -> setContent(movieHistory)
+                MovieFragment.PLAN -> setContent(moviePlan)
+            }
         }
     }
 
