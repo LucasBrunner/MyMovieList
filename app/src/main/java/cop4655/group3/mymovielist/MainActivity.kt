@@ -2,7 +2,7 @@ package cop4655.group3.mymovielist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import cop4655.group3.mymovielist.boundfragments.MovieSearch
 
 class MainActivity : AppCompatActivity() {
 
