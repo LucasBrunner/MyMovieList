@@ -7,9 +7,13 @@
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/round_button.xml" value="0.2005" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/activity_main.xml" value="0.3319746376811594" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_history.xml" value="0.2953125" />
+        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_info.xml" value="0.33" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_list.xml" value="0.38632246376811596" />
+        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_plan.xml" value="0.30520833333333336" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_search.xml" value="0.2953125" />
+        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_search2.xml" value="0.278125" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_navbar.xml" value="0.3319746376811594" />
+        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/movie_info.xml" value="0.278125" />
       </map>
     </option>
   </component>
