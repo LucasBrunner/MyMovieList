@@ -1,5 +1,6 @@
 package cop4655.group3.mymovielist.webapi
 
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -13,5 +14,13 @@ interface OmdbInterface {
         @Query("s") searchQuery: String,
         @Query("page") pageNumber: Int = 1,
         @Query("apikey") apiKey: String = API_KEY,
-    ) : Call<MovieSearch>
+    ) : Call<MovieSearchResults>
+
+    @GET(" ")
+    fun searchMoviesRaw(
+        @Query("s") searchQuery: String,
+        @Query("page") pageNumber: Int = 1,
+        @Query("apikey") apiKey: String = API_KEY,
+    ) : Call<ResponseBody>
+
 }

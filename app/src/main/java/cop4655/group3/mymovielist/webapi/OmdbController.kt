@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class OmdbController {
+object OmdbController {
     fun getService() : OmdbInterface {
         val gson = GsonBuilder()
             .setLenient()
