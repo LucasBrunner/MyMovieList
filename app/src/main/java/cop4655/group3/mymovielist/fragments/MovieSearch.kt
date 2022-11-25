@@ -8,13 +8,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cop4655.group3.mymovielist.MainActivity
-import cop4655.group3.mymovielist.R
 import cop4655.group3.mymovielist.data.MovieData
-import cop4655.group3.mymovielist.data.MovieDataRecycler
+import cop4655.group3.mymovielist.data.MovieDataRecyclerAdapter
 import cop4655.group3.mymovielist.databinding.FragmentMovieSearchBinding
 import cop4655.group3.mymovielist.webapi.MovieSearchResults
 import cop4655.group3.mymovielist.webapi.OmdbController
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,7 +26,7 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
     private var showExtraInfo: Boolean = false
 
     private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapter: RecyclerView.Adapter<MovieDataRecycler.ViewHolder>? = null
+    private var adapter: RecyclerView.Adapter<MovieDataRecyclerAdapter.ViewHolder>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -97,7 +95,8 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
     }
 
     fun setMovie(movieData: List<MovieData>) {
-        adapter = MovieDataRecycler(movieData)
+        adapter = MovieDataRecyclerAdapter(movieData)
+        binding?.recyclerView?.adapter = adapter
     }
 
 //    private fun toggleExtraInfo() {

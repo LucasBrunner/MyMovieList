@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cop4655.group3.mymovielist.R
 
-class MovieDataRecycler(private val movieDataList: List<MovieData>): RecyclerView.Adapter<MovieDataRecycler.ViewHolder>() {
+class MovieDataRecyclerAdapter(private val movieDataList: List<MovieData>): RecyclerView.Adapter<MovieDataRecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder(movieInfoView: View) : RecyclerView.ViewHolder(movieInfoView) {
         lateinit var poster:      ImageView
