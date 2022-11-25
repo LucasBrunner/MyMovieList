@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools" >
     
     <data>
+        <import type="android.view.View" />
         <variable
             name="container"
             type="cop4655.group3.mymovielist.recyclerviewutilities.MovieDataContainer" />
@@ -20,80 +21,96 @@
         app:cardElevation="4dp" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/main_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent" >
+            android:layout_height="wrap_content" >
 
-            <ImageView
-                android:id="@+id/poster_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:contentDescription="@string/poster_description_text" />
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:textSize="32sp"
-                android:text="@{container.movieData.title}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="@id/poster_image"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Iron Man" />
-
-            <TextView
-                android:id="@+id/year"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:textSize="16sp"
-                android:text='@{"Released in: " + container.movieData.year}'
-                app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintStart_toStartOf="@id/title"
-                tools:text="Released in: 2008" />
-
-            <ImageButton
-                android:id="@+id/extra_info_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:src="@drawable/ic_baseline_arrow_drop_down_24" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/extra_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/main_info">
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_margin="10dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/description"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/main_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:textSize="18sp"
-                android:text="@{container.movieData.plot}"
-                app:layout_constraintTop_toTopOf="@id/divider"
-                tools:text="Movie about things" />
+                app:layout_constraintTop_toTopOf="parent" >
+
+                <ImageView
+                    android:id="@+id/poster_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:contentDescription="@string/poster_description_text" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="viewStart"
+                    android:textSize="32sp"
+                    android:text="@{container.movieData.title}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/poster_image"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="Iron Man" />
+
+                <TextView
+                    android:id="@+id/year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="viewStart"
+                    android:textSize="16sp"
+                    android:text='@{"Released in: " + container.movieData.year}'
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    tools:text="Released in: 2008" />
+
+                <ImageButton
+                    android:id="@+id/extra_info_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@{container.showDropDown ? @drawable/ic_baseline_arrow_drop_up_24 : @drawable/ic_baseline_arrow_drop_down_24}"
+                    android:onClick="@{() -> container.toggleDropDown()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/extra_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{container.showDropDown ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toBottomOf="@+id/main_info">
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_margin="10dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/loading_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_margin="5dp"
+                    android:visibility="@{container.isLoading ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/divider" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textSize="18sp"
+                    android:text="@{container.movieData.plot}"
+                    android:visibility="@{container.isLoading ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintTop_toTopOf="@id/divider"
+                    tools:text="Movie about things" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
