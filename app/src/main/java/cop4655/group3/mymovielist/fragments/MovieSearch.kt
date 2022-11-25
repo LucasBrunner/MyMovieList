@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cop4655.group3.mymovielist.MainActivity
 import cop4655.group3.mymovielist.data.MovieData
-import cop4655.group3.mymovielist.adapters.MovieDataRecyclerAdapter
+import cop4655.group3.mymovielist.recyclerviewutilities.MovieDataRecyclerAdapter
 import cop4655.group3.mymovielist.databinding.FragmentMovieSearchBinding
+import cop4655.group3.mymovielist.recyclerviewutilities.MovieDataContainer
 import cop4655.group3.mymovielist.webapi.MovieSearchResults
 import cop4655.group3.mymovielist.webapi.OmdbController
 import retrofit2.Call
@@ -61,7 +62,7 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
                     response.body()?.let { body ->
                         setDataVisibility(true)
                         isLoading(false)
-                        setMovie(body.Search.toList())
+                        setMovie(body.Search.toList().map { data -> MovieDataContainer(data) })
                     }
                 }
 
@@ -94,7 +95,7 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
 
     }
 
-    fun setMovie(movieData: List<MovieData>) {
+    fun setMovie(movieData: List<MovieDataContainer>) {
         adapter = MovieDataRecyclerAdapter(movieData)
         binding?.recyclerView?.adapter = adapter
     }

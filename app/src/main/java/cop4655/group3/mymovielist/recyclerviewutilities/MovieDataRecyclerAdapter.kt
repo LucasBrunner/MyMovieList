@@ -1,4 +1,4 @@
-package cop4655.group3.mymovielist.adapters
+package cop4655.group3.mymovielist.recyclerviewutilities
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,12 +8,12 @@ import cop4655.group3.mymovielist.R
 import cop4655.group3.mymovielist.data.MovieData
 import cop4655.group3.mymovielist.databinding.MovieDataListItemBinding
 
-class MovieDataRecyclerAdapter(private val movieDataList: List<MovieData>): RecyclerView.Adapter<MovieDataRecyclerAdapter.ViewHolder>() {
+class MovieDataRecyclerAdapter(private val movieDataList: List<MovieDataContainer>): RecyclerView.Adapter<MovieDataRecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: MovieDataListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: MovieData) {
+        fun bind(item: MovieDataContainer) {
             binding.apply {
-                movieData = item
+                container = item
                 executePendingBindings()
             }
         }

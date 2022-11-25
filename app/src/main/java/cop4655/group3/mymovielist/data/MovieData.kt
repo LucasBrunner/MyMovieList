@@ -1,5 +1,12 @@
 package cop4655.group3.mymovielist.data
 
+import android.util.Log
+import cop4655.group3.mymovielist.webapi.MovieSearchResults
+import cop4655.group3.mymovielist.webapi.OmdbController
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 data class MovieData(
     var Actors: String?,
     var Awards: String?,

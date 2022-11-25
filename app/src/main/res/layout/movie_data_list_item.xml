@@ -7,8 +7,8 @@
     
     <data>
         <variable
-            name="movieData"
-            type="cop4655.group3.mymovielist.data.MovieData" />
+            name="container"
+            type="cop4655.group3.mymovielist.recyclerviewutilities.MovieDataContainer" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="viewStart"
                 android:textSize="32sp"
-                android:text="@{movieData.title}"
+                android:text="@{container.movieData.title}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="@id/poster_image"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="viewStart"
                 android:textSize="16sp"
-                android:text='@{"Released in: " + movieData.year}'
+                android:text='@{"Released in: " + container.movieData.year}'
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="@id/title"
                 tools:text="Released in: 2008" />
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:textSize="18sp"
-                android:text="@{movieData.plot}"
+                android:text="@{container.movieData.plot}"
                 app:layout_constraintTop_toTopOf="@id/divider"
                 tools:text="Movie about things" />
 

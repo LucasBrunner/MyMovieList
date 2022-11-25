@@ -1,5 +1,6 @@
 package cop4655.group3.mymovielist.webapi
 
+import cop4655.group3.mymovielist.data.MovieData
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -24,4 +25,10 @@ interface OmdbInterface {
         @Query("apikey") apiKey: String = API_KEY,
     ) : Call<ResponseBody>
 
+    @GET(" ")
+    fun getFulldata(
+        @Query("i") imdbId: String,
+        @Query("y") year: String,
+        @Query("apikey") apiKey: String = API_KEY,
+    ) : Call<MovieData>
 }
