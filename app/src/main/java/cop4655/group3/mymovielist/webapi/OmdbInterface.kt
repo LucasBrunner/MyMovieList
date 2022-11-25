@@ -14,6 +14,7 @@ interface OmdbInterface {
         @Query("s") searchQuery: String,
         @Query("page") pageNumber: Int = 1,
         @Query("apikey") apiKey: String = API_KEY,
+        @Query("y") year: String = "",
     ) : Call<MovieSearchResults>
 
     @GET(" ")

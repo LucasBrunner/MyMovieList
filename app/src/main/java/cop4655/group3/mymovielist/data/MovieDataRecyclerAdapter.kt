@@ -31,7 +31,7 @@ class MovieDataRecyclerAdapter(private val movieDataList: List<MovieData>): Recy
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.title.text       = movieDataList[position].Title
-        holder.year.text        = movieDataList[position].Year
+        holder.year.text        = "Released in " + movieDataList[position].Year
         holder.description.text = movieDataList[position].Plot
     }
 
