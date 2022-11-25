@@ -2,9 +2,12 @@ package cop4655.group3.mymovielist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import cop4655.group3.mymovielist.databinding.ActivityMainBinding
+import cop4655.group3.mymovielist.fragments.*
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
 
     enum class MovieFragment {
         SEARCH,
@@ -21,10 +24,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
 
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.navbar_container, navbar)
+            replace(binding.navbarContainer.id, navbar)
             commit()
         }
 
@@ -46,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     private fun setContent(fragment: MovieAppFragment) {
         fragment.refresh()
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.content_container, fragment)
+            replace(binding.contentContainer.id, fragment)
             commit()
         }
     }
