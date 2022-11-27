@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cop4655.group3.mymovielist.MainActivity
 import cop4655.group3.mymovielist.data.MovieData
+import cop4655.group3.mymovielist.data.RawMovieData
 import cop4655.group3.mymovielist.recyclerviewutilities.MovieDataRecyclerAdapter
 import cop4655.group3.mymovielist.databinding.FragmentMovieSearchBinding
 import cop4655.group3.mymovielist.recyclerviewutilities.MovieDataContainer
@@ -20,7 +21,7 @@ import retrofit2.Response
 
 class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
 
-    private var movieData: MovieData? = null
+    private var rawMovieData: RawMovieData? = null
 
     private var binding: FragmentMovieSearchBinding? = null
 
@@ -62,7 +63,7 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
                     response.body()?.let { body ->
                         setDataVisibility(true)
                         isLoading(false)
-                        setMovie(body.Search.toList().map { data -> MovieDataContainer(data) })
+                        setMovie(body.Search.toList().map { data -> MovieDataContainer(MovieData(data)) })
                     }
                 }
 

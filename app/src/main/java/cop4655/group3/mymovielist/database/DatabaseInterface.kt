@@ -4,9 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import cop4655.group3.mymovielist.data.MovieData
 import cop4655.group3.mymovielist.data.MyRating
 import cop4655.group3.mymovielist.data.Rating
+import cop4655.group3.mymovielist.data.RawMovieData
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -91,44 +91,44 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
 
     }
 
-    fun insertMovie(movieData: MovieData) {
+    fun insertRawMovie(rawMovieData: RawMovieData) {
         val database = this.writableDatabase
         val movieValues = ContentValues()
 
-        movieValues.put("Actors", movieData.Actors)
-        movieValues.put("Awards", movieData.Awards)
-        movieValues.put("BoxOffice", movieData.BoxOffice)
-        movieValues.put("Country", movieData.Country)
-        movieValues.put("Dvd", movieData.DVD)
-        movieValues.put("Director", movieData.Director)
-        movieValues.put("Genre", movieData.Genre)
-        movieValues.put("Language", movieData.Language)
-        movieValues.put("Metascore", movieData.Metascore)
-        movieValues.put("Plot", movieData.Plot)
-        movieValues.put("Poster", movieData.Poster)
-        movieValues.put("Production", movieData.Production)
-        movieValues.put("Rated", movieData.Rated)
+        movieValues.put("Actors", rawMovieData.Actors)
+        movieValues.put("Awards", rawMovieData.Awards)
+        movieValues.put("BoxOffice", rawMovieData.BoxOffice)
+        movieValues.put("Country", rawMovieData.Country)
+        movieValues.put("Dvd", rawMovieData.DVD)
+        movieValues.put("Director", rawMovieData.Director)
+        movieValues.put("Genre", rawMovieData.Genre)
+        movieValues.put("Language", rawMovieData.Language)
+        movieValues.put("Metascore", rawMovieData.Metascore)
+        movieValues.put("Plot", rawMovieData.Plot)
+        movieValues.put("Poster", rawMovieData.Poster)
+        movieValues.put("Production", rawMovieData.Production)
+        movieValues.put("Rated", rawMovieData.Rated)
         // ratings
-        movieValues.put("Released", movieData.Released)
-        movieValues.put("Response", movieData.Response)
-        movieValues.put("Runtime", movieData.Runtime)
-        movieValues.put("Title", movieData.Title)
-        movieValues.put("Type", movieData.Type)
-        movieValues.put("Website", movieData.Website)
-        movieValues.put("Writer", movieData.Writer)
-        movieValues.put("Year", movieData.Year)
-        movieValues.put("ImdbId", movieData.imdbID)
-        movieValues.put("ImdbRating", movieData.imdbRating)
-        movieValues.put("ImdbVotes", movieData.imdbVotes)
+        movieValues.put("Released", rawMovieData.Released)
+        movieValues.put("Response", rawMovieData.Response)
+        movieValues.put("Runtime", rawMovieData.Runtime)
+        movieValues.put("Title", rawMovieData.Title)
+        movieValues.put("Type", rawMovieData.Type)
+        movieValues.put("Website", rawMovieData.Website)
+        movieValues.put("Writer", rawMovieData.Writer)
+        movieValues.put("Year", rawMovieData.Year)
+        movieValues.put("ImdbId", rawMovieData.imdbID)
+        movieValues.put("ImdbRating", rawMovieData.imdbRating)
+        movieValues.put("ImdbVotes", rawMovieData.imdbVotes)
 
         database.insert("movie", null, movieValues)
 
-        movieData.Ratings?.let { ratings ->
+        rawMovieData.Ratings?.let { ratings ->
             for (rating in ratings) {
                 rating?.let {
                     val ratingValues = ContentValues()
 
-                    ratingValues.put("ImdbId", movieData.imdbID)
+                    ratingValues.put("ImdbId", rawMovieData.imdbID)
                     ratingValues.put("Source", rating.Source)
                     ratingValues.put("Source", rating.Value)
 
@@ -138,7 +138,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         }
     }
 
-    fun getMovie(imdbId: String): MovieData? {
+    fun getRawMovie(imdbId: String): RawMovieData? {
         val database = this.writableDatabase
 
         val movieQuery = """
@@ -175,7 +175,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
 
         val movieResult = database.rawQuery(movieQuery, null)
         if (movieResult.moveToNext()) {
-            val movieData = MovieData(
+            val rawMovieData = RawMovieData(
                 movieResult.getString(0),
                 movieResult.getString(1),
                 movieResult.getString(2),
@@ -189,7 +189,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
                 movieResult.getString(10),
                 movieResult.getString(11),
                 movieResult.getString(12),
-                ArrayList<Rating>(),
+                ArrayList<Rating?>(),
                 movieResult.getString(13),
                 movieResult.getString(14),
                 movieResult.getString(15),
@@ -218,10 +218,10 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
                     ratingsResult.getString(0),
                     ratingsResult.getString(1)
                 )
-                movieData.Ratings.add(rating)
+                rawMovieData.Ratings?.add(rating)
             }
 
-            return movieData
+            return rawMovieData
         }
         return null
     }

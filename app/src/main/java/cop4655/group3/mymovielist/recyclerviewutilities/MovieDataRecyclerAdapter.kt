@@ -3,10 +3,8 @@ package cop4655.group3.mymovielist.recyclerviewutilities
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import cop4655.group3.mymovielist.R
-import cop4655.group3.mymovielist.data.MovieData
 import cop4655.group3.mymovielist.databinding.MovieDataListItemBinding
 
 class MovieDataRecyclerAdapter(private val movieDataList: List<MovieDataContainer>): RecyclerView.Adapter<MovieDataRecyclerAdapter.ViewHolder>() {

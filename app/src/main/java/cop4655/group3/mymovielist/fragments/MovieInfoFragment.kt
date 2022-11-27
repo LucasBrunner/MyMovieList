@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cop4655.group3.mymovielist.R
-import cop4655.group3.mymovielist.data.MovieData
+import cop4655.group3.mymovielist.data.RawMovieData
 import cop4655.group3.mymovielist.databinding.FragmentMovieInfoBinding
 
 class MovieInfoFragment : Fragment() {
 
-    private var movieData: MovieData? = null
+    private var rawMovieData: RawMovieData? = null
 
     private var binding: FragmentMovieInfoBinding? = null
 
@@ -31,12 +31,12 @@ class MovieInfoFragment : Fragment() {
         return binding?.root
     }
 
-    fun setMovie(movieData: MovieData) {
-        this.movieData = movieData
+    fun setMovie(rawMovieData: RawMovieData) {
+        this.rawMovieData = rawMovieData
         binding?.let { b ->
-            b.movieTitle.text = movieData.Title
-            b.movieYear.text = movieData.Year
-            b.movieDescription.text = movieData.Plot
+            b.movieTitle.text = rawMovieData.Title
+            b.movieYear.text = rawMovieData.Year
+            b.movieDescription.text = rawMovieData.Plot
         }
     }
 
