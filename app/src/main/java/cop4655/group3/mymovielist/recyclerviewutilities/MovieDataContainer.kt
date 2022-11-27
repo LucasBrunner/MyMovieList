@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.*
 import cop4655.group3.mymovielist.data.MovieData
+import cop4655.group3.mymovielist.data.MyRating
 import cop4655.group3.mymovielist.webapi.OmdbController
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,6 +21,7 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
     private var mdra: MovieDataRecyclerAdapter? = null
 
     val movieData: MutableLiveData<MovieData> = MutableLiveData()
+    var myRating: MutableLiveData<MyRating>? = null
 
     init {
         hasFullData.set(!movieData.Plot.isNullOrBlank())

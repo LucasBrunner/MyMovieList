@@ -21,7 +21,7 @@ data class MovieData(
     var Poster: String?,
     var Production: String?,
     var Rated: String?,
-    var Ratings: List<Rating?>?,
+    var Ratings: MutableList<Rating> = ArrayList<Rating>(),
     var Released: String?,
     var Response: String?,
     var Runtime: String?,

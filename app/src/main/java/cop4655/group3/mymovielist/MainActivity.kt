@@ -2,8 +2,11 @@ package cop4655.group3.mymovielist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import cop4655.group3.mymovielist.database.DatabaseInterface
 import cop4655.group3.mymovielist.databinding.ActivityMainBinding
 import cop4655.group3.mymovielist.fragments.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
