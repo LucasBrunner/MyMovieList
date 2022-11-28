@@ -67,7 +67,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@{container.showDropDown ? @drawable/ic_baseline_arrow_drop_up_24 : @drawable/ic_baseline_arrow_drop_down_24}"
-                    android:onClick="@{() -> container.toggleDropDown()}"
+                    android:onClick="@{(view) -> container.toggleDropDown(view)}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 

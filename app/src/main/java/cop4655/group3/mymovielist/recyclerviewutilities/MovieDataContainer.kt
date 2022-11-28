@@ -1,10 +1,14 @@
 package cop4655.group3.mymovielist.recyclerviewutilities
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
+import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.*
 import cop4655.group3.mymovielist.data.MovieData
 import cop4655.group3.mymovielist.data.RawMovieData
+import cop4655.group3.mymovielist.database.DatabaseInterface
 import cop4655.group3.mymovielist.webapi.OmdbController
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,10 +23,10 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
 
     val movieData: MutableLiveData<MovieData> = MutableLiveData(movieData)
 
-    fun toggleDropDown() {
+    fun toggleDropDown(view: View) {
         showDropDown.set(!showDropDown.get())
         if (showDropDown.get() && movieData.value?.hasFullData != true) {
-            getFullData()
+            getFullData(view.context)
         }
     }
 
@@ -31,37 +35,51 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
         this.recycler = mdra
     }
 
-    private fun getFullData() {
+    fun updateMovieData(data: MovieData) {
+        movieData.postValue(data)
+        recycler?.notifyItemChanged(listPosition)
+    }
+
+    private fun getFullData(context: Context) {
         Log.i("MovieDataContainer: ", "get full data")
-        movieData.value?.rawMovieData?.imdbID?.let { imdbID ->
-            movieData.value?.rawMovieData?.Year?.let { year ->
-                isLoading.set(true)
-                OmdbController
-                    .getService()
-                    .getFulldata(
-                        imdbID,
-                        year
-                    )
-                    .enqueue(object : Callback<RawMovieData> {
-                        override fun onResponse(call: Call<RawMovieData>, response: Response<RawMovieData>) {
-                            response.body()?.let { body ->
-                                movieData.value?.rawMovieData = body
-                                movieData.value?.hasFullData = true
-                                movieData.postValue(movieData.value)
-                                recycler?.notifyItemChanged(listPosition)
-                            }
-                            isLoading.set(false)
-                        }
-
-                        override fun onFailure(call: Call<RawMovieData>, t: Throwable) {
-                            isLoading.set(false)
-                            Log.i("Movie search error: ", "Callback called onFailure")
-                            Log.e("Movie search error: ", t.message.toString())
-                        }
-
-                    })
-            }
-        }
+        isLoading.set(true)
+        movieData.value?.getFullData(
+            context,
+            { data ->
+                updateMovieData(data)
+                isLoading.set(false)
+                DatabaseInterface(context).insertFullMovieData(data)
+            },
+            { isLoading.set(false) },
+        )
+//        movieData.value?.rawMovieData?.imdbID?.let { imdbID ->
+//            movieData.value?.rawMovieData?.Year?.let { year ->
+//                isLoading.set(true)
+//                OmdbController
+//                    .getService()
+//                    .getFulldata(
+//                        imdbID,
+//                        year
+//                    )
+//                    .enqueue(object : Callback<RawMovieData> {
+//                        override fun onResponse(call: Call<RawMovieData>, response: Response<RawMovieData>) {
+//                            response.body()?.let { body ->
+//                                movieData.value?.rawMovieData = body
+//                                movieData.postValue(movieData.value)
+//                                recycler?.notifyItemChanged(listPosition)
+//                            }
+//                            isLoading.set(false)
+//                        }
+//
+//                        override fun onFailure(call: Call<RawMovieData>, t: Throwable) {
+//                            isLoading.set(false)
+//                            Log.i("Movie search error: ", "Callback called onFailure")
+//                            Log.e("Movie search error: ", t.message.toString())
+//                        }
+//
+//                    })
+//            }
+//        }
 
     }
 }

@@ -1,31 +1,20 @@
 package cop4655.group3.mymovielist.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cop4655.group3.mymovielist.MainActivity
-import cop4655.group3.mymovielist.data.MovieData
-import cop4655.group3.mymovielist.data.RawMovieData
-import cop4655.group3.mymovielist.recyclerviewutilities.MovieDataRecyclerAdapter
+import cop4655.group3.mymovielist.MovieDataUtilities.getMoviesFromSearch
 import cop4655.group3.mymovielist.databinding.FragmentMovieSearchBinding
 import cop4655.group3.mymovielist.recyclerviewutilities.MovieDataContainer
-import cop4655.group3.mymovielist.webapi.MovieSearchResults
-import cop4655.group3.mymovielist.webapi.OmdbController
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import cop4655.group3.mymovielist.recyclerviewutilities.MovieDataRecyclerAdapter
 
 class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
 
-    private var rawMovieData: RawMovieData? = null
-
     private var binding: FragmentMovieSearchBinding? = null
-
-    private var showExtraInfo: Boolean = false
 
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<MovieDataRecyclerAdapter.ViewHolder>? = null
@@ -45,39 +34,30 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
         }
 
         setDataVisibility(false)
-        isLoading(false)
+        setLoading(false)
 
         return binding?.root
     }
 
     private fun findMovie() {
         setDataVisibility(false)
-        isLoading(true)
-        OmdbController
-            .getService()
-            .searchMovies(
-                binding?.movieSearchBox?.text.toString()
+        setLoading(true)
+        this.context?.let { context ->
+            getMoviesFromSearch(
+                binding?.movieSearchBox?.text.toString(),
+                context,
+                { movieData ->
+                    setDataVisibility(true)
+                    setLoading(false)
+                    setMovie(movieData.map { data -> MovieDataContainer(data) })
+                },
+                { setLoading(false) },
             )
-            .enqueue(object : Callback<MovieSearchResults> {
-                override fun onResponse(call: Call<MovieSearchResults>, response: Response<MovieSearchResults>) {
-                    response.body()?.let { body ->
-                        setDataVisibility(true)
-                        isLoading(false)
-                        setMovie(body.Search.toList().map { data -> MovieDataContainer(MovieData(data)) })
-                    }
-                }
-
-                override fun onFailure(call: Call<MovieSearchResults>, t: Throwable) {
-                    isLoading(false)
-                    Log.i("Movie search error: ", "Callback called onFailure")
-                    Log.e("Movie search error: ", t.message.toString())
-                }
-
-            })
+        }
     }
 
-    fun setDataVisibility(setVisible: Boolean) {
-        if (setVisible) {
+    private fun setDataVisibility(value: Boolean) {
+        if (value) {
             binding?.recyclerView?.visibility = View.VISIBLE
         } else {
             binding?.recyclerView?.clearAnimation()
@@ -85,8 +65,8 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
         }
     }
 
-    fun isLoading(setLoading: Boolean) {
-        if (setLoading) {
+    private fun setLoading(value: Boolean) {
+        if (value) {
             binding?.loadingSpinner?.clearAnimation()
             binding?.loadingSpinner?.visibility = View.VISIBLE
         } else {
@@ -96,7 +76,7 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
 
     }
 
-    fun setMovie(movieData: List<MovieDataContainer>) {
+    private fun setMovie(movieData: List<MovieDataContainer>) {
         adapter = MovieDataRecyclerAdapter(movieData)
         binding?.recyclerView?.adapter = adapter
     }
