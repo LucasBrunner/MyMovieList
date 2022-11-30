@@ -35,7 +35,7 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
         this.recycler = mdra
     }
 
-    fun updateMovieData(data: MovieData) {
+    private fun updateMovieData(data: MovieData) {
         movieData.postValue(data)
         recycler?.notifyItemChanged(listPosition)
     }
@@ -48,38 +48,15 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
             { data ->
                 updateMovieData(data)
                 isLoading.set(false)
-                DatabaseInterface(context).insertFullMovieData(data)
+                putInDatabase(context)
             },
             { isLoading.set(false) },
         )
-//        movieData.value?.rawMovieData?.imdbID?.let { imdbID ->
-//            movieData.value?.rawMovieData?.Year?.let { year ->
-//                isLoading.set(true)
-//                OmdbController
-//                    .getService()
-//                    .getFulldata(
-//                        imdbID,
-//                        year
-//                    )
-//                    .enqueue(object : Callback<RawMovieData> {
-//                        override fun onResponse(call: Call<RawMovieData>, response: Response<RawMovieData>) {
-//                            response.body()?.let { body ->
-//                                movieData.value?.rawMovieData = body
-//                                movieData.postValue(movieData.value)
-//                                recycler?.notifyItemChanged(listPosition)
-//                            }
-//                            isLoading.set(false)
-//                        }
-//
-//                        override fun onFailure(call: Call<RawMovieData>, t: Throwable) {
-//                            isLoading.set(false)
-//                            Log.i("Movie search error: ", "Callback called onFailure")
-//                            Log.e("Movie search error: ", t.message.toString())
-//                        }
-//
-//                    })
-//            }
-//        }
+    }
 
+    private fun putInDatabase(context: Context) {
+        this.movieData.value?.let { data ->
+            DatabaseInterface(context).insertFullMovieData(data)
+        }
     }
 }
