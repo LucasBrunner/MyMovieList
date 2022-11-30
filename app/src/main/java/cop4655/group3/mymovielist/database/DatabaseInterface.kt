@@ -323,110 +323,66 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         return null
     }
 
-    fun insertMyRating(myRating: MyRating, imdbId: String) {
+    fun setPlan(
+        addDate: Calendar,
+        imdbId: String,
+    ) {
         val database = this.writableDatabase
-        val myRatingValues = ContentValues()
+        val calendarString = dateToString(addDate)
 
-        myRatingValues.put("ImdbId", imdbId)
-        myRatingValues.put("Stars", myRating.stars)
-        myRatingValues.put("Heart", myRating.heart)
-
-        database.insert("myRating", null, myRatingValues)
-    }
-
-    fun getMyRating(imdbId: String): MyRating? {
-        val database = this.writableDatabase
-
-        val myRatingQuery = """
-            SELECT
-                Stars,
-                Hearts
-            FROM my_rating
-            WHERE ImdbId = "$imdbId";
+        val update = """
+            UPDATE my_movie_data
+            SET PlanAddDate = $calendarString
+            WHERE ImdbId = $imdbId;
         """.trimIndent()
 
-        val myRatingResult = database.rawQuery(myRatingQuery, null)
-
-        if (myRatingResult.moveToNext()) {
-            val myRating = MyRating(
-                myRatingResult.getInt(0),
-                myRatingResult.getInt(1) == 1
-            )
-            myRatingResult.close()
-            return myRating
-        }
-        myRatingResult.close()
-        return null
+        database.execSQL(update)
     }
 
-    fun insertMoviePlan(imdbId: String, calendar: Calendar) {
+    fun setHistory(
+        addDate: Calendar,
+        imdbId: String,
+    ) {
         val database = this.writableDatabase
+        val calendarString = dateToString(addDate)
 
-        val moviePlanValues = ContentValues()
-
-        moviePlanValues.put("ImdbId", imdbId)
-        moviePlanValues.put("DateAdded", dateToString(calendar))
-
-        database.insert("movie_plan", null, moviePlanValues)
-    }
-
-    /**
-     * Returns true if the movie is in the watch plan.
-     * The date the movie was added will be inserted into the optional calendar parameter if it exists.
-     */
-    fun isInMoviePlan(imdbId: String, calendar: Calendar? = null): Boolean {
-        val database = this.writableDatabase
-
-        val moviePlanQuery = """
-            SELECT DateAdded
-            FROM movie_plan
-            WHERE ImdbId = "$imdbId";
+        val update = """
+            UPDATE my_movie_data
+            SET HistoryAddDate = $calendarString
+            WHERE ImdbId = $imdbId;
         """.trimIndent()
 
-        val result = database.rawQuery(moviePlanQuery, null)
-
-        if (result.moveToNext()) {
-            if (calendar != null) {
-                result.getStringOrNull(2)?.let { string -> stringToDate(string, calendar) }
-            }
-            return true
-        }
-        return false
+        database.execSQL(update)
     }
 
-    fun insertMovieHistory(imdbId: String, calendar: Calendar) {
+    fun setRating(
+        stars: Int,
+        imdbId: String,
+    ) {
         val database = this.writableDatabase
 
-        val movieHistoryValues = ContentValues()
-
-        movieHistoryValues.put("ImdbId", imdbId)
-        movieHistoryValues.put("DateAdded", dateToString(calendar))
-
-        database.insert("movie_history", null, movieHistoryValues)
-    }
-
-    /**
-     * Returns true if the movie is in the watch history.
-     * The date the movie was added will be inserted into the optional calendar parameter if it exists.
-     */
-    fun isInMovieHistory(imdbId: String, calendar: Calendar? = null): Boolean {
-        val database = this.writableDatabase
-
-        val moviePlanQuery = """
-            SELECT DateAdded
-            FROM movie_plan
-            WHERE ImdbId = "$imdbId";
+        val update = """
+            UPDATE my_movie_data
+            SET Stars = $stars
+            WHERE ImdbId = $imdbId;
         """.trimIndent()
 
-        val result = database.rawQuery(moviePlanQuery, null)
+        database.execSQL(update)
+    }
 
-        if (result.moveToNext()) {
-            if (calendar != null) {
-                result.getStringOrNull(2)?.let { string -> stringToDate(string, calendar) }
-            }
-            return true
-        }
-        return false
+    fun setHeart(
+        hasHeart: Boolean,
+        imdbId: String,
+    ) {
+        val database = this.writableDatabase
+
+        val update = """
+            UPDATE my_movie_data
+            SET Heart = $hasHeart
+            WHERE ImdbId = $imdbId;
+        """.trimIndent()
+
+        database.execSQL(update)
     }
 
     private fun dateToString(calendar: Calendar): String {
