@@ -2,15 +2,57 @@ package cop4655.group3.mymovielist.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.core.database.getIntOrNull
 import androidx.core.database.getStringOrNull
 import cop4655.group3.mymovielist.data.*
+import java.lang.StringBuilder
+import java.sql.ResultSet
 import java.util.*
 import kotlin.collections.ArrayList
 
+private val RAWMOVIEDATA_FIELDS = """
+    `movie`.`Actors`,
+    `movie`.`Awards`,
+    `movie`.`BoxOffice`,
+    `movie`.`Country`,
+    `movie`.`Dvd`,
+    `movie`.`Director`,
+    `movie`.`Genre`,
+    `movie`.`Language`,
+    `movie`.`Metascore`,
+    `movie`.`Plot`,
+    `movie`.`Poster`,
+    `movie`.`Production`,
+    `movie`.`Rated`,
+
+    `movie`.`Released`,
+    `movie`.`Response`,
+    `movie`.`Runtime`,
+    `movie`.`Title`,
+    `movie`.`Type`,
+    `movie`.`Website`,
+    `movie`.`Writer`,
+    `movie`.`Year`,
+    `movie`.`ImdbId`,
+    `movie`.`ImdbRating`,
+    `movie`.`ImdbVotes`
+""".trimIndent()
+private val MYMOVIEDATA_FIELDS = """
+                `my_movie_data`.`Stars`,
+                `my_movie_data`.`Heart`,
+                `my_movie_data`.`PlanAddDate`,
+                `my_movie_data`.`HistoryAddDate`
+""".trimIndent()
+private val RATING_FIELDS = """
+    Source,
+    Value
+""".trimIndent()
+
 class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovielist", null, 2) {
+    // region createAndUpdate
     override fun onCreate(db: SQLiteDatabase?) {
         val movieTable = """
             CREATE TABLE movie (
@@ -139,8 +181,9 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
             db?.execSQL(newMovieTable)
         }
     }
+    // endregion createAndUpdate
 
-    fun insertRawMovie(rawMovieData: RawMovieData) {
+    private fun insertRawMovie(rawMovieData: RawMovieData) {
         val database = this.writableDatabase
         val movieValues = ContentValues()
 
@@ -187,91 +230,40 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         }
     }
 
-    fun getRawMovie(imdbId: String): RawMovieData? {
-        val database = this.writableDatabase
-
+    private fun getRawMovieData(imdbId: String): RawMovieData? {
         val movieQuery = """
             SELECT
-                Actors,
-                Awards,
-                BoxOffice,
-                Country,
-                Dvd,
-                Director,
-                Genre,
-                Language,
-                Metascore,
-                Plot,
-                Poster,
-                Production,
-                Rated,
-                
-                Released,
-                Response,
-                Runtime,
-                Title,
-                Type,
-                Website,
-                Writer,
-                Year,
-                ImdbId,
-                ImdbRating,
-                ImdbVotes
+                $RAWMOVIEDATA_FIELDS
             FROM movie
             WHERE ImdbId = "$imdbId";
         """.trimIndent()
 
-        val movieResult = database.rawQuery(movieQuery, null)
+        val movieResult = this.writableDatabase.rawQuery(movieQuery, null)
         if (movieResult.moveToNext()) {
-            val rawMovieData = RawMovieData(
-                movieResult.getStringOrNull(0),
-                movieResult.getStringOrNull(1),
-                movieResult.getStringOrNull(2),
-                movieResult.getStringOrNull(3),
-                movieResult.getStringOrNull(4),
-                movieResult.getStringOrNull(5),
-                movieResult.getStringOrNull(6),
-                movieResult.getStringOrNull(7),
-                movieResult.getStringOrNull(8),
-                movieResult.getStringOrNull(9),
-                movieResult.getStringOrNull(10),
-                movieResult.getStringOrNull(11),
-                movieResult.getStringOrNull(12),
-                ArrayList<Rating?>(),
-                movieResult.getStringOrNull(13),
-                movieResult.getStringOrNull(14),
-                movieResult.getStringOrNull(15),
-                movieResult.getStringOrNull(16),
-                movieResult.getStringOrNull(17),
-                movieResult.getStringOrNull(18),
-                movieResult.getStringOrNull(19),
-                movieResult.getStringOrNull(20),
-                movieResult.getStringOrNull(21),
-                movieResult.getStringOrNull(22),
-                movieResult.getStringOrNull(23)
-            )
+            val rawMovieData = extractRawMovieData(movieResult)
+            rawMovieData.imdbID?.let { imdbId ->
+                rawMovieData.Ratings = getRatings(imdbId)
+            }
+            return rawMovieData
+        }
+        return null
+    }
 
-            val ratingsQuery = """
+    private fun getRatings(imdbId: String): MutableList<Rating> {
+        val ratingsQuery = """
                 SELECT
-                    Source,
-                    Value
+                    $RATING_FIELDS
                 FROM rating
                 WHERE ImdbId = "$imdbId";
             """.trimIndent()
 
-            val ratingsResult = database.rawQuery(ratingsQuery, null)
-
-            while (ratingsResult.moveToNext()) {
-                val rating = Rating(
-                    ratingsResult.getStringOrNull(0),
-                    ratingsResult.getStringOrNull(1)
-                )
-                rawMovieData.Ratings?.add(rating)
-            }
-
-            return rawMovieData
+        val ratingsResult = this.writableDatabase.rawQuery(ratingsQuery, null)
+        val ratings = ArrayList<Rating>()
+        while (ratingsResult.moveToNext()) {
+            val rating = extractRating(ratingsResult)
+            ratings.add(rating)
         }
-        return null
+        return ratings
     }
 
     fun insertMyMovieData(
@@ -295,39 +287,27 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
     }
 
     fun getMyMovieData(imdbId: String): MyMovieData? {
-        val database = this.writableDatabase
-
         val myRatingQuery = """
             SELECT
-                Stars,
-                Heart,
-                PlanAddDate,
-                HistoryAddDate
+                $MYMOVIEDATA_FIELDS
             FROM my_movie_data
             WHERE ImdbId = "$imdbId";
         """.trimIndent()
 
-        val myMovieDataResult = database.rawQuery(myRatingQuery, null)
+        val myMovieDataResult = this.writableDatabase.rawQuery(myRatingQuery, null)
 
         if (myMovieDataResult.moveToNext()) {
-            val myMovieData = MyMovieData(
-                myMovieDataResult.getIntOrNull(0),
-                myMovieDataResult.getInt(1) == 1,
-                myMovieDataResult.getStringOrNull(2)?.let { string -> stringToDate(string) },
-                myMovieDataResult.getStringOrNull(3)?.let { string -> stringToDate(string) }
-            )
-            myMovieDataResult.close()
-            return myMovieData
+            return extractMyMovieData(myMovieDataResult)
         }
         myMovieDataResult.close()
         return null
     }
 
+    // region setMyMovieData
     fun setPlan(
         addDate: Calendar,
         imdbId: String,
     ) {
-        val database = this.writableDatabase
         val calendarString = dateToString(addDate)
 
         val update = """
@@ -336,14 +316,13 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
             WHERE ImdbId = $imdbId;
         """.trimIndent()
 
-        database.execSQL(update)
+        this.writableDatabase.execSQL(update)
     }
 
     fun setHistory(
         addDate: Calendar,
         imdbId: String,
     ) {
-        val database = this.writableDatabase
         val calendarString = dateToString(addDate)
 
         val update = """
@@ -352,38 +331,35 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
             WHERE ImdbId = $imdbId;
         """.trimIndent()
 
-        database.execSQL(update)
+        this.writableDatabase.execSQL(update)
     }
 
     fun setRating(
         stars: Int,
         imdbId: String,
     ) {
-        val database = this.writableDatabase
-
         val update = """
             UPDATE my_movie_data
             SET Stars = $stars
             WHERE ImdbId = $imdbId;
         """.trimIndent()
 
-        database.execSQL(update)
+        this.writableDatabase.execSQL(update)
     }
 
     fun setHeart(
         hasHeart: Boolean,
         imdbId: String,
     ) {
-        val database = this.writableDatabase
-
         val update = """
             UPDATE my_movie_data
             SET Heart = $hasHeart
             WHERE ImdbId = $imdbId;
         """.trimIndent()
 
-        database.execSQL(update)
+        this.writableDatabase.execSQL(update)
     }
+    // endregion setMyMovieData
 
     private fun dateToString(calendar: Calendar): String {
         return String.format(
@@ -415,7 +391,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
     }
 
     fun getFullMovieData(imdbId: String): MovieData? {
-        return getRawMovie(imdbId)?.let { rawMovieData ->
+        return getRawMovieData(imdbId)?.let { rawMovieData ->
             getMyMovieData(imdbId)?.let { myMovieData ->
                 MovieData(rawMovieData, myMovieData)
             }
@@ -432,5 +408,136 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         }
     }
 
+    // region searchMovies
+    fun getMoviesInPlan(): MutableList<MovieData> {
+        return getMovies("WHERE PlanAddDate NOT NULL")
+    }
+
+    fun getMoviesInHistory(): MutableList<MovieData> {
+        return getMovies("WHERE HistoryAddDate NOT NULL")
+    }
+
+    /**
+     * All movies with a heart
+     */
+    fun getMoviesHearted(): MutableList<MovieData> {
+        return getMovies("WHERE Heart != 0")
+    }
+
+    /**
+     * All movies without a heart
+     */
+    fun getMoviesNotHearted(): MutableList<MovieData> {
+        return getMovies("WHERE Heart = 0")
+    }
+
+    /**
+     * All movies with more than this amount of stars
+     */
+    fun getMoviesMinStars(stars: Int): MutableList<MovieData> {
+        return getMovies("WHERE Stars > $stars")
+    }
+
+    /**
+     * All movies with fewer than this amount of stars
+     */
+    fun getMoviesMaxStars(stars: Int): MutableList<MovieData> {
+        return getMovies("WHERE Stars < $stars")
+    }
+
+    /**
+     * All movies with this amount of stars
+     */
+    fun getMoviesWithStars(stars: Int): MutableList<MovieData> {
+        return getMovies("WHERE Stars = $stars")
+    }
+
+    fun getMoviesWithName(name: String): MutableList<MovieData> {
+        val conditionString = StringBuilder()
+        conditionString.append("WHERE 1 = 1\n")
+        for (nameBit in name.split(" ")) {
+            conditionString.append("AND Title LIKE %$nameBit%\n")
+        }
+        return getMovies(conditionString.toString())
+    }
+
+    private fun getMovies(conditions: String): MutableList<MovieData> {
+        val query = """
+            SELECT
+                $RAWMOVIEDATA_FIELDS,
+                $MYMOVIEDATA_FIELDS
+            FROM 
+                my_movie_data
+                INNER JOIN movie USING(ImdbId)
+            $conditions;
+        """.trimIndent()
+
+        val results = this.writableDatabase.rawQuery(query, null)
+
+        val movies = ArrayList<MovieData>()
+        while (results.moveToNext()) {
+            val rawMovieData = extractRawMovieData(results)
+            rawMovieData.imdbID?.let { imdbId ->
+                rawMovieData.Ratings = getRatings(imdbId)
+                val myMovieData = extractMyMovieData(results)
+                movies.add(
+                    MovieData(
+                        rawMovieData,
+                        myMovieData
+                    )
+                )
+            }
+        }
+        return movies
+    }
+    // endregion searchMovies
+
+    // region extractMethods
+    private fun extractRawMovieData(cursor: Cursor): RawMovieData {
+        return RawMovieData(
+            cursor.getStringOrNull(cursor.getColumnIndex("Actors")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Awards")),
+            cursor.getStringOrNull(cursor.getColumnIndex("BoxOffice")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Country")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Dvd")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Director")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Genre")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Language")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Metascore")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Plot")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Poster")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Production")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Rated")),
+            ArrayList<Rating>(),
+            cursor.getStringOrNull(cursor.getColumnIndex("Released")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Response")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Runtime")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Title")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Type")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Website")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Writer")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Year")),
+            cursor.getStringOrNull(cursor.getColumnIndex("ImdbId")),
+            cursor.getStringOrNull(cursor.getColumnIndex("ImdbRating")),
+            cursor.getStringOrNull(cursor.getColumnIndex("ImdbVotes")),
+        )
+    }
+
+    private fun extractRating(cursor: Cursor): Rating {
+        return Rating(
+            cursor.getStringOrNull(cursor.getColumnIndex("Source")),
+            cursor.getStringOrNull(cursor.getColumnIndex("Value"))
+        )
+    }
+
+    private fun extractMyMovieData(cursor: Cursor): MyMovieData {
+        return MyMovieData(
+            cursor.getIntOrNull(cursor.getColumnIndex("Stars")),
+            cursor.getIntOrNull(cursor.getColumnIndex("Heart")) == 1,
+            cursor.getStringOrNull(cursor.getColumnIndex("PlanAddDate"))?.let { string -> stringToDate(string) },
+            cursor.getStringOrNull(cursor.getColumnIndex("HistoryAddDate"))?.let { string -> stringToDate(string) }
+        )
+    }
+    // endregion extractMethods
     // implement search queries
 }

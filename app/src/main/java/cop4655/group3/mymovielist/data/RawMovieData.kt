@@ -21,7 +21,7 @@ data class RawMovieData(
     var Poster: String? = null,
     var Production: String? = null,
     var Rated: String? = null,
-    var Ratings: MutableList<Rating?>? = null,
+    var Ratings: MutableList<Rating> = ArrayList<Rating>(),
     var Released: String? = null,
     var Response: String? = null,
     var Runtime: String? = null,
