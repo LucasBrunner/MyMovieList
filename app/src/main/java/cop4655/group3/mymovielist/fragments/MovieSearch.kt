@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cop4655.group3.mymovielist.MainActivity
 import cop4655.group3.mymovielist.MovieDataUtilities.getMoviesFromSearch
+import cop4655.group3.mymovielist.database.DatabaseInterface
 import cop4655.group3.mymovielist.databinding.FragmentMovieSearchBinding
 import cop4655.group3.mymovielist.recyclerviewutilities.MovieDataContainer
 import cop4655.group3.mymovielist.recyclerviewutilities.MovieDataRecyclerAdapter
@@ -27,7 +28,8 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
         binding = FragmentMovieSearchBinding.inflate(layoutInflater, container, false)
 
         binding?.let { b ->
-            b.movieSearchButton.setOnClickListener { findMovie() }
+            b.searchInternet.setOnClickListener() { findMovieOnline() }
+            b.searchDatabase.setOnClickListener() { findMovieDatabase() }
 
             layoutManager = LinearLayoutManager(context)
             b.recyclerView.layoutManager = layoutManager
@@ -39,7 +41,18 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
         return binding?.root
     }
 
-    private fun findMovie() {
+    private fun findMovieDatabase() {
+        this.context?.let { context ->
+            setMovies(
+                DatabaseInterface(context).getMoviesWithName(
+                    binding?.movieSearchBox?.text.toString()
+                ).map { data -> MovieDataContainer(data) }.toMutableList()
+            )
+        }
+        setDataVisibility(true)
+    }
+
+    private fun findMovieOnline() {
         setDataVisibility(false)
         setLoading(true)
         this.context?.let { context ->
@@ -49,7 +62,7 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
                 { movieData ->
                     setDataVisibility(true)
                     setLoading(false)
-                    setMovie(movieData.map { data -> MovieDataContainer(data) }.toMutableList())
+                    setMovies(movieData.map { data -> MovieDataContainer(data) }.toMutableList())
                 },
                 { setLoading(false) },
             )
@@ -76,7 +89,7 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
 
     }
 
-    private fun setMovie(movieData: MutableList<MovieDataContainer>) {
+    private fun setMovies(movieData: MutableList<MovieDataContainer>) {
         adapter = MovieDataRecyclerAdapter(movieData)
         binding?.recyclerView?.adapter = adapter
     }

@@ -24,13 +24,22 @@
             android:hint="@string/movie_title_hint" />
 
         <Button
-            android:id="@+id/movie_search_button"
+            android:id="@+id/search_internet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/movie_search_box"
             app:layout_constraintStart_toStartOf="@id/movie_search_box"
+            app:layout_constraintEnd_toStartOf="@id/search_database"
+            android:text="@string/search_internet" />
+
+        <Button
+            android:id="@+id/search_database"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/movie_search_box"
+            app:layout_constraintStart_toEndOf="@id/search_internet"
             app:layout_constraintEnd_toEndOf="@id/movie_search_box"
-            android:text="@string/search_movies" />
+            android:text="@string/search_database" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
