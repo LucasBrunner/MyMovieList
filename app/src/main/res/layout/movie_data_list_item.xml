@@ -121,19 +121,115 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
+                        android:layout_marginBottom="10dp"
                         android:text="@{container.movieData.rawMovieData.plot}"
                         android:textSize="18sp"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Movie about things" />
 
-                    <include
-                        android:id="@+id/my_movie_data_display"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
                         android:layout_marginTop="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="46dp"
-                        layout="@layout/my_movie_data_display"
                         app:layout_constraintTop_toBottomOf="@id/plot"
-                        app:container="@{container}"/>
+                        app:layout_constraintStart_toStartOf="@id/plot" >
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/planToggle"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_baseline_access_time_24"
+                            android:tint="@{container.movieData.myMovieData.planList != null ? @color/black : @color/grey}"
+                            android:onClick="@{(view) -> container.togglePlanList(view)}"
+                            android:background="?selectableItemBackgroundBorderless" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/historyToggle"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginHorizontal="5dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_baseline_list_alt_24"
+                            android:tint="@{container.movieData.myMovieData.historyList != null ? @color/black : @color/grey}"
+                            android:onClick="@{(view) -> container.toggleHistoryList(view)}"
+                            android:background="?selectableItemBackgroundBorderless" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/heartToggle"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_baseline_favorite_24"
+                            android:tint="@{container.movieData.myMovieData.heart != null ? @color/heart_pink : @color/grey}"
+                            android:onClick="@{(view) -> container.toggleHeart(view)}"
+                            android:background="?selectableItemBackgroundBorderless" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintTop_toBottomOf="@id/plot"
+                        app:layout_constraintEnd_toEndOf="@id/plot" >
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:scaleType="fitCenter"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_baseline_star_24"
+                            android:tint="@{container.movieData.myMovieData.stars >= 1 ? @color/star_yellow : @color/grey}"
+                            android:onClick="@{(view) -> container.setStarCount(view, 1)}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:scaleType="fitCenter"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_baseline_star_24"
+                            android:tint="@{container.movieData.myMovieData.stars >= 2 ? @color/star_yellow : @color/grey}"
+                            android:onClick="@{(view) -> container.setStarCount(view, 2)}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:scaleType="fitCenter"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_baseline_star_24"
+                            android:tint="@{container.movieData.myMovieData.stars >= 3 ? @color/star_yellow : @color/grey}"
+                            android:onClick="@{(view) -> container.setStarCount(view, 3)}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:scaleType="fitCenter"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_baseline_star_24"
+                            android:tint="@{container.movieData.myMovieData.stars >= 4 ? @color/star_yellow : @color/grey}"
+                            android:onClick="@{(view) -> container.setStarCount(view, 4)}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:scaleType="fitCenter"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_baseline_star_24"
+                            android:tint="@{container.movieData.myMovieData.stars >= 5 ? @color/star_yellow : @color/grey}"
+                            android:onClick="@{(view) -> container.setStarCount(view, 5)}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

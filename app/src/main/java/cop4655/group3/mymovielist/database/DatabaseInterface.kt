@@ -696,8 +696,8 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         return MyMovieData(
             cursor.getIntOrNull(cursor.getColumnIndex("Stars")) ?: 0,
             cursor.getStringOrNull(cursor.getColumnIndex("Heart"))?.let { string -> stringToDate(string) },
+            cursor.getStringOrNull(cursor.getColumnIndex("HistoryAddDate"))?.let { string -> stringToDate(string) },
             cursor.getStringOrNull(cursor.getColumnIndex("PlanAddDate"))?.let { string -> stringToDate(string) },
-            cursor.getStringOrNull(cursor.getColumnIndex("HistoryAddDate"))?.let { string -> stringToDate(string) }
         )
     }
     // endregion extractMethods
