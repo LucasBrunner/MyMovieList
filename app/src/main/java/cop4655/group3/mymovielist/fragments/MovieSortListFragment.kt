@@ -115,7 +115,7 @@ class MovieSortListFragment(
                 when (listShowType) {
                     ListShowType.HISTORY -> it.movieData.value?.myMovieData?.historyList?.toString()
                     ListShowType.PLAN -> it.movieData.value?.myMovieData?.planList?.toString()
-                    ListShowType.HEARTED -> it.movieData.value?.rawMovieData?.Title
+                    ListShowType.HEARTED -> it.movieData.value?.myMovieData?.heart?.toString()
                 }
             }
             SortMethod.METASCORE -> it.movieData.value?.rawMovieData?.Metascore

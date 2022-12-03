@@ -33,14 +33,13 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
                     val now = Calendar.getInstance()
                     DatabaseInterface(view.context).setPlan(now, imdbId)
                     movieData.myMovieData.planList = now
-                    updateMovieData()
                 } else {
                     DatabaseInterface(view.context).setPlan(null, imdbId)
                     movieData.myMovieData.planList = null
-                    updateMovieData()
                 }
             }
         }
+        updateMovieData()
     }
 
     fun toggleHistoryList(view: View) {
@@ -50,14 +49,13 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
                     val now = Calendar.getInstance()
                     DatabaseInterface(view.context).setHistory(now, imdbId)
                     movieData.myMovieData.historyList = now
-                    updateMovieData()
                 } else {
                     DatabaseInterface(view.context).setHistory(null, imdbId)
                     movieData.myMovieData.historyList = null
-                    updateMovieData()
                 }
             }
         }
+        updateMovieData()
     }
 
     fun toggleHeart(view: View) {
@@ -67,14 +65,13 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
                     val now = Calendar.getInstance()
                     DatabaseInterface(view.context).setHeart(now, imdbId)
                     movieData.myMovieData.heart = now
-                    updateMovieData()
                 } else {
                     DatabaseInterface(view.context).setHeart(null, imdbId)
                     movieData.myMovieData.heart = null
-                    updateMovieData()
                 }
             }
         }
+        updateMovieData()
     }
 
     fun setStarCount(view: View, starPosition: Int) {
@@ -83,14 +80,13 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
                 if (movieData.myMovieData.stars == starPosition) {
                     DatabaseInterface(view.context).setRating(0, imdbId)
                     movieData.myMovieData.stars = 0
-                    updateMovieData()
                 } else {
                     DatabaseInterface(view.context).setRating(starPosition, imdbId)
                     movieData.myMovieData.stars = starPosition
-                    updateMovieData()
                 }
             }
         }
+        updateMovieData()
     }
 
     fun setRecyclerData(listPosition: Int, mdra: MovieDataRecyclerAdapter) {
@@ -101,6 +97,7 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
     private fun updateMovieData(data: MovieData? = movieData.value) {
         movieData.postValue(data)
         recycler?.notifyItemChanged(listPosition)
+        recycler?.notifyDataSetChanged()
     }
 
     private fun getFullData(context: Context) {
