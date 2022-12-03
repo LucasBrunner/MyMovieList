@@ -49,7 +49,7 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
                 { movieData ->
                     setDataVisibility(true)
                     setLoading(false)
-                    setMovie(movieData.map { data -> MovieDataContainer(data) })
+                    setMovie(movieData.map { data -> MovieDataContainer(data) }.toMutableList())
                 },
                 { setLoading(false) },
             )
@@ -76,25 +76,10 @@ class MovieSearch(main: MainActivity) : MovieAppFragment(main) {
 
     }
 
-    private fun setMovie(movieData: List<MovieDataContainer>) {
+    private fun setMovie(movieData: MutableList<MovieDataContainer>) {
         adapter = MovieDataRecyclerAdapter(movieData)
         binding?.recyclerView?.adapter = adapter
     }
-
-//    private fun toggleExtraInfo() {
-//        binding?.let { b ->
-//            showExtraInfo = !showExtraInfo
-//            if (showExtraInfo) {
-//                b.searchResult.sometimesShow.clearAnimation()
-//                b.searchResult.sometimesShow.visibility = View.VISIBLE
-//                b.searchResult.extraInfoButton.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
-//            } else {
-//                b.searchResult.sometimesShow.clearAnimation()
-//                b.searchResult.sometimesShow.visibility = View.GONE
-//                b.searchResult.extraInfoButton.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
-//            }
-//        }
-//    }
 
     override fun startup() {} // Is run once when the fragment is created
     override fun refresh() {} // Is run every time the fragment is swapped to

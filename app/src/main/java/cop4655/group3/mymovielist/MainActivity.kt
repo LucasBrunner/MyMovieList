@@ -2,11 +2,8 @@ package cop4655.group3.mymovielist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import cop4655.group3.mymovielist.database.DatabaseInterface
 import cop4655.group3.mymovielist.databinding.ActivityMainBinding
 import cop4655.group3.mymovielist.fragments.*
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,12 +13,14 @@ class MainActivity : AppCompatActivity() {
         SEARCH,
         HISTORY,
         PLAN,
+        HEARTED,
     }
 
     private val navbar = Navbar(this)
     private val movieSearch = MovieSearch(this)
-    private val movieHistory = MovieHistory(this)
-    private val moviePlan = MoviePlan(this)
+    private val movieHistory = MovieSortListFragment(this, MovieSortListFragment.ListShowType.HISTORY)
+    private val moviePlan = MovieSortListFragment(this, MovieSortListFragment.ListShowType.PLAN)
+    private val movieHearted = MovieSortListFragment(this, MovieSortListFragment.ListShowType.HEARTED)
 
     private var currentFragment = MovieFragment.SEARCH
 
@@ -47,6 +46,7 @@ class MainActivity : AppCompatActivity() {
                 MovieFragment.SEARCH -> setContent(movieSearch)
                 MovieFragment.HISTORY -> setContent(movieHistory)
                 MovieFragment.PLAN -> setContent(moviePlan)
+                MovieFragment.HEARTED -> setContent(movieHearted)
             }
         }
     }

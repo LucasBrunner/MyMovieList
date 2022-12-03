@@ -23,6 +23,7 @@ class Navbar(private val main: MainActivity) : Fragment() {
         binding.historyButton.setOnClickListener{ main.changeFragment(MainActivity.MovieFragment.HISTORY) }
         binding.searchButton.setOnClickListener{ main.changeFragment(MainActivity.MovieFragment.SEARCH) }
         binding.planButton.setOnClickListener{ main.changeFragment(MainActivity.MovieFragment.PLAN) }
+        binding.heartedButton.setOnClickListener{ main.changeFragment(MainActivity.MovieFragment.HEARTED) }
 
         binding.searchButton.setColorFilter(R.color.grey)
 
@@ -35,16 +36,25 @@ class Navbar(private val main: MainActivity) : Fragment() {
                 binding.searchButton.setColorFilter(R.color.grey)
                 binding.historyButton.clearColorFilter()
                 binding.planButton.clearColorFilter()
+                binding.heartedButton.clearColorFilter()
             }
             MainActivity.MovieFragment.HISTORY -> {
                 binding.searchButton.clearColorFilter()
                 binding.historyButton.setColorFilter(R.color.grey)
                 binding.planButton.clearColorFilter()
+                binding.heartedButton.clearColorFilter()
             }
             MainActivity.MovieFragment.PLAN -> {
                 binding.searchButton.clearColorFilter()
                 binding.historyButton.clearColorFilter()
                 binding.planButton.setColorFilter(R.color.grey)
+                binding.heartedButton.clearColorFilter()
+            }
+            MainActivity.MovieFragment.HEARTED -> {
+                binding.searchButton.clearColorFilter()
+                binding.historyButton.clearColorFilter()
+                binding.planButton.clearColorFilter()
+                binding.heartedButton.setColorFilter(R.color.grey)
             }
         }
     }

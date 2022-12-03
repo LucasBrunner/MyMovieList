@@ -52,7 +52,7 @@
                 android:src="@drawable/ic_baseline_favorite_24"
                 android:layout_margin="5dp"
                 android:onClick="@{(view) -> container.toggleHeart(view)}"
-                android:tint="@{container.movieData.myMovieData.heart ? @color/heart_pink : @color/grey}" />
+                android:tint="@{container.movieData.myMovieData.heart != null ? @color/heart_pink : @color/grey}" />
 
         </LinearLayout>
 

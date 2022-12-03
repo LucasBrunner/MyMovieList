@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ascending_toggle_icon.xml" value="0.213" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.2035" />
+        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_arrow_downward_24.xml" value="0.213" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.1485" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_arrow_drop_up_24.xml" value="0.1485" />
+        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_arrow_upward_24.xml" value="0.213" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2035" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_list_alt_24.xml" value="0.1485" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2005" />
@@ -19,6 +22,7 @@
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_plan.xml" value="0.30520833333333336" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_search.xml" value="0.2953125" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_search2.xml" value="0.278125" />
+        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_sort_list.xml" value="0.33" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_navbar.xml" value="0.3319746376811594" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/movie_data_list_item.xml" value="0.33" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/movie_info.xml" value="0.278125" />

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cop4655.group3.mymovielist.R
 import cop4655.group3.mymovielist.databinding.MovieDataListItemBinding
 
-class MovieDataRecyclerAdapter(private val movieDataList: List<MovieDataContainer>): RecyclerView.Adapter<MovieDataRecyclerAdapter.ViewHolder>() {
+class MovieDataRecyclerAdapter(private val movieDataList: MutableList<MovieDataContainer>): RecyclerView.Adapter<MovieDataRecyclerAdapter.ViewHolder>() {
 
     init {
         var i = 0

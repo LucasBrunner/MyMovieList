@@ -8,7 +8,10 @@ import java.util.*
  */
 data class MyMovieData(
     var stars: Int = 0,
-    var heart: Boolean = false,
+    /**
+     * If heart is null then they this movie is not in the watchlist.
+     */
+    var heart: Calendar? = null,
     /**
      * If watchList is null then they this movie is not in the watchlist.
      */

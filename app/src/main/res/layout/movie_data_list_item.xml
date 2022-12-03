@@ -77,7 +77,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="3dp"
                     android:src="@drawable/ic_baseline_favorite_24"
-                    android:visibility="@{container.movieData.myMovieData.heart ? View.VISIBLE : View.INVISIBLE}"
+                    android:visibility="@{container.movieData.myMovieData.heart != null ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:tint="@color/heart_pink" />

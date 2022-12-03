@@ -63,13 +63,14 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
     fun toggleHeart(view: View) {
         movieData.value?.let { movieData ->
             movieData.rawMovieData.imdbID?.let { imdbId ->
-                if (movieData.myMovieData.heart) {
-                    DatabaseInterface(view.context).setHeart(false, imdbId)
-                    movieData.myMovieData.heart = false
+                if (movieData.myMovieData.heart == null) {
+                    val now = Calendar.getInstance()
+                    DatabaseInterface(view.context).setHeart(now, imdbId)
+                    movieData.myMovieData.heart = now
                     updateMovieData()
                 } else {
-                    DatabaseInterface(view.context).setHeart(true, imdbId)
-                    movieData.myMovieData.heart = true
+                    DatabaseInterface(view.context).setHeart(null, imdbId)
+                    movieData.myMovieData.heart = null
                     updateMovieData()
                 }
             }

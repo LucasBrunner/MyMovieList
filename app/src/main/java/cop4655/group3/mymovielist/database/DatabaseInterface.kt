@@ -54,7 +54,7 @@ private val RATING_FIELDS = """
     Value
 """.trimIndent()
 
-class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovielist", null, 4) {
+class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovielist", null, 5) {
     // region createAndUpdate
     override fun onCreate(db: SQLiteDatabase?) {
         val movieTable = """
@@ -91,7 +91,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
             CREATE TABLE my_movie_data (
                 ImdbId VARCHAR(16) PRIMARY KEY,
                 Stars INTEGER NOT NULL CHECK (Stars >= 0 AND Stars <= 5) DEFAULT 0,
-                Heart BOOLEAN NOT NULL CHECK (Heart IN (0, 1)) DEFAULT 0,
+                Heart VARCHAR(27) DEFAULT NULL,
                 PlanAddDate VARCHAR(27) DEFAULT NULL,
                 HistoryAddDate VARCHAR(27) DEFAULT NULL,
                 FOREIGN KEY (ImdbId) REFERENCES movie(ImdbId)                
@@ -236,14 +236,60 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
 
             val copyData = """
             INSERT INTO my_movie_data (
+                ImdbId,
                 Stars,
                 Heart,
                 PlanAddDate,
                 HistoryAddDate
             )                
             SELECT
+                ImdbId,
                 IFNULL(Stars, 0),
                 Heart,
+                PlanAddDate,
+                HistoryAddDate
+            FROM old_my_movie_data;
+            """.trimIndent()
+
+            val dropOldTable = """
+                DROP TABLE old_my_movie_data;
+            """.trimIndent()
+
+            db?.execSQL(renameOldMyMovieDataTable)
+            db?.execSQL(newMyMovieDataTable)
+            db?.execSQL(copyData)
+            db?.execSQL(dropOldTable)
+        }
+
+        if (oldVersion < 5) {
+            val renameOldMyMovieDataTable = """
+            ALTER TABLE my_movie_data 
+            RENAME TO old_my_movie_data;
+            """.trimIndent()
+
+            val newMyMovieDataTable = """
+            CREATE TABLE my_movie_data (
+                ImdbId VARCHAR(16) PRIMARY KEY,
+                Stars INTEGER NOT NULL CHECK (Stars >= 0 AND Stars <= 5) DEFAULT 0,
+                Heart VARCHAR(27) DEFAULT NULL,
+                PlanAddDate VARCHAR(27) DEFAULT NULL,
+                HistoryAddDate VARCHAR(27) DEFAULT NULL,
+                FOREIGN KEY (ImdbId) REFERENCES movie(ImdbId)                
+            )
+        """.trimIndent()
+
+            val copyData = """
+            INSERT INTO my_movie_data (
+                ImdbId,
+                Stars,
+                Heart,
+                PlanAddDate,
+                HistoryAddDate
+            )                
+            SELECT
+                ImdbId,
+                Stars,
+                PlanAddDate,
                 PlanAddDate,
                 HistoryAddDate
             FROM old_my_movie_data;
@@ -355,7 +401,9 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
 
         myMovieDataValues.put("ImdbId", imdbId)
         myMovieDataValues.put("Stars", myMovieData.stars)
-        myMovieDataValues.put("Heart", myMovieData.heart)
+        myMovieData.heart?.let { heart ->
+            myMovieDataValues.put("PlanAddDate", dateToString(heart))
+        }
         myMovieData.planList?.let { planList ->
             myMovieDataValues.put("PlanAddDate", dateToString(planList))
         }
@@ -444,27 +492,31 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
             SET Stars = $stars
             WHERE ImdbId = "$imdbId";
         """.trimIndent()
-        } ?: run {
-            update = """
-            UPDATE my_movie_data
-            SET Stars = NULL
-            WHERE ImdbId = "$imdbId";
-            """.trimIndent()
         }
 
         this.writableDatabase.execSQL(update)
     }
 
     fun setHeart(
-        hasHeart: Boolean,
+        heart: Calendar?,
         imdbId: String,
     ) {
-        val heartValue = if (hasHeart) 1 else 0
-        val update = """
+        var update = ""
+
+        heart?.also { heart ->
+            val calendarString = dateToString(heart)
+            update = """
             UPDATE my_movie_data
-            SET Heart = $heartValue
+            SET Heart = "$calendarString"
             WHERE ImdbId = "$imdbId";
         """.trimIndent()
+        } ?: run {
+            update = """
+            UPDATE my_movie_data
+            SET Heart = NULL
+            WHERE ImdbId = "$imdbId";
+            """.trimIndent()
+        }
 
         this.writableDatabase.execSQL(update)
     }
@@ -530,14 +582,14 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
      * All movies with a heart
      */
     fun getMoviesHearted(): MutableList<MovieData> {
-        return getMovies("WHERE Heart != 0")
+        return getMovies("WHERE Heart NOT NULL")
     }
 
     /**
      * All movies without a heart
      */
     fun getMoviesNotHearted(): MutableList<MovieData> {
-        return getMovies("WHERE Heart = 0")
+        return getMovies("WHERE Heart IS NULL")
     }
 
     /**
@@ -643,7 +695,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
     private fun extractMyMovieData(cursor: Cursor): MyMovieData {
         return MyMovieData(
             cursor.getIntOrNull(cursor.getColumnIndex("Stars")) ?: 0,
-            cursor.getIntOrNull(cursor.getColumnIndex("Heart")) == 1,
+            cursor.getStringOrNull(cursor.getColumnIndex("Heart"))?.let { string -> stringToDate(string) },
             cursor.getStringOrNull(cursor.getColumnIndex("PlanAddDate"))?.let { string -> stringToDate(string) },
             cursor.getStringOrNull(cursor.getColumnIndex("HistoryAddDate"))?.let { string -> stringToDate(string) }
         )

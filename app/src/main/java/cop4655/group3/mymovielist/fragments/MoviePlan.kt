@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import cop4655.group3.mymovielist.MainActivity
 import cop4655.group3.mymovielist.R
+import cop4655.group3.mymovielist.databinding.FragmentMoviePlanBinding
+import cop4655.group3.mymovielist.databinding.FragmentMovieSearchBinding
 
 class MoviePlan(main: MainActivity) : MovieAppFragment(main) {
 
@@ -14,7 +16,8 @@ class MoviePlan(main: MainActivity) : MovieAppFragment(main) {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie_plan, container, false)
+        val binding = FragmentMoviePlanBinding.inflate(layoutInflater, container, false)
+        return binding?.root
     }
 
     override fun startup() {} // Is run once when the fragment is created
