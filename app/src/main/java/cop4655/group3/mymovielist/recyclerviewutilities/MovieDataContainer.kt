@@ -35,7 +35,7 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
         this.recycler = mdra
     }
 
-    private fun updateMovieData(data: MovieData) {
+    private fun updateMovieData(data: MovieData? = movieData.value) {
         movieData.postValue(data)
         recycler?.notifyItemChanged(listPosition)
     }

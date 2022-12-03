@@ -71,9 +71,11 @@
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <ImageView
-                    android:layout_margin="3dp"
+                    android:id="@+id/heart_hint"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="3dp"
                     android:src="@drawable/ic_baseline_favorite_24"
                     android:visibility="@{container.movieData.myMovieData.heart ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintTop_toTopOf="parent"
@@ -125,6 +127,7 @@
                         tools:text="Movie about things" />
 
                     <include
+                        android:id="@+id/my_movie_data_display"
                         android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
