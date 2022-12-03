@@ -402,7 +402,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         myMovieDataValues.put("ImdbId", imdbId)
         myMovieDataValues.put("Stars", myMovieData.stars)
         myMovieData.heart?.let { heart ->
-            myMovieDataValues.put("PlanAddDate", dateToString(heart))
+            myMovieDataValues.put("Heart", dateToString(heart))
         }
         myMovieData.planList?.let { planList ->
             myMovieDataValues.put("PlanAddDate", dateToString(planList))
