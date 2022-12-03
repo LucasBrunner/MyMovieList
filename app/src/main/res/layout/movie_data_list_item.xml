@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -71,6 +70,16 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
+                <ImageView
+                    android:layout_margin="3dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_baseline_favorite_24"
+                    android:visibility="@{container.movieData.myMovieData.heart ? View.VISIBLE : View.INVISIBLE}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="@color/heart_pink" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -97,53 +106,33 @@
                     android:layout_height="30dp"
                     android:layout_margin="5dp"
                     android:visibility="@{container.isLoading ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintTop_toBottomOf="@+id/addToMovieHistoryButton" />
+                    app:layout_constraintTop_toBottomOf="@+id/divider" />
 
-                <TextView
-                    android:id="@+id/description"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="@{container.movieData.rawMovieData.plot}"
-                    android:textSize="18sp"
                     android:visibility="@{container.isLoading ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintTop_toBottomOf="@+id/addToMovieHistoryButton"
-                    tools:layout_editor_absoluteX="5dp"
-                    tools:text="Movie about things" />
+                    app:layout_constraintTop_toBottomOf="@id/divider">
 
-                <Button
-                    android:id="@+id/addToMoviePlanButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/movie_plan"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/loading_spinner"
-                    app:layout_constraintHorizontal_bias="0.255"
-                    app:layout_constraintStart_toStartOf="@+id/description"
-                    app:layout_constraintTop_toBottomOf="@+id/divider" />
+                    <TextView
+                        android:id="@+id/plot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@{container.movieData.rawMovieData.plot}"
+                        android:textSize="18sp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Movie about things" />
 
-                <Button
-                    android:id="@+id/addToMovieHistoryButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/watched_list"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/loading_spinner"
-                    app:layout_constraintHorizontal_bias="0.817"
-                    app:layout_constraintStart_toStartOf="@+id/description"
-                    app:layout_constraintTop_toBottomOf="@+id/divider" />
+                    <include
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        layout="@layout/my_movie_data_display"
+                        app:layout_constraintTop_toBottomOf="@id/plot"
+                        app:container="@{container}"/>
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/add_to"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toTopOf="@+id/description"
-                    app:layout_constraintEnd_toStartOf="@+id/addToMovieHistoryButton"
-                    app:layout_constraintHorizontal_bias="0.059"
-                    app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

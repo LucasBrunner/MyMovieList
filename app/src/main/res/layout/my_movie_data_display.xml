@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="container"
+            type="cop4655.group3.mymovielist.recyclerviewutilities.MovieDataContainer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/addToMoviePlanButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:scaleType="fitCenter"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_baseline_access_time_24"
+                android:layout_margin="5dp"
+                android:tint="@color/grey" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/addToMovieHistoryButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:scaleType="fitCenter"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_baseline_list_alt_24"
+                android:layout_margin="5dp"
+                android:tint="@color/grey" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/heart"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:scaleType="fitCenter"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_baseline_favorite_24"
+                android:layout_margin="5dp"
+                android:tint="@{container.movieData.myMovieData.heart ? @color/heart_pink : @color/grey}" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <include
+                android:id="@+id/star1"
+                layout="@layout/rating_star"
+                app:container="@{container}"
+                app:position="@{1}" />
+
+            <include
+                android:id="@+id/star2"
+                layout="@layout/rating_star"
+                app:container="@{container}"
+                app:position="@{2}" />
+
+            <include
+                android:id="@+id/star3"
+                layout="@layout/rating_star"
+                app:container="@{container}"
+                app:position="@{3}" />
+
+            <include
+                android:id="@+id/star4"
+                layout="@layout/rating_star"
+                app:container="@{container}"
+                app:position="@{4}" />
+
+            <include
+                android:id="@+id/star5"
+                layout="@layout/rating_star"
+                app:container="@{container}"
+                app:position="@{5}" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

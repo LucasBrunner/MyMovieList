@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#c2c2c2</color>
     <color name="light_grey">#d3d3d3</color>
+    <color name="transparent">#00000000</color>
+    <color name="heart_pink">#fc4bcd</color>
+    <color name="star_yellow">#f2d100</color>
 </resources>
