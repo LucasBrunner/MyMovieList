@@ -6,4 +6,7 @@
     <string name="search_movies">Search Movies</string>
     <string name="poster_description_text">The Movie\'s Poster</string>
     <string name="release_year_text">Released in: </string>
+    <string name="add_to">Add To:</string>
+    <string name="watched_list">Watched List</string>
+    <string name="movie_plan">Movie Plan</string>
 </resources>
