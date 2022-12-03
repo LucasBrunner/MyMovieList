@@ -7,12 +7,12 @@ import java.util.*
  * If watchList or planList are null then they this movie is not in those list.
  */
 data class MyMovieData(
-    var stars: Int? = null,
+    var stars: Int = 0,
     var heart: Boolean = false,
     /**
      * If watchList is null then they this movie is not in the watchlist.
      */
-    var watchList: Calendar? = null,
+    var historyList: Calendar? = null,
     /**
      * If planList is null then they this movie is not in the plan-to-watch list.
      */

@@ -7,9 +7,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.core.database.getIntOrNull
 import androidx.core.database.getStringOrNull
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
+import androidx.lifecycle.MutableLiveData
 import cop4655.group3.mymovielist.data.*
 import java.lang.StringBuilder
-import java.sql.ResultSet
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -51,7 +54,7 @@ private val RATING_FIELDS = """
     Value
 """.trimIndent()
 
-class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovielist", null, 2) {
+class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovielist", null, 4) {
     // region createAndUpdate
     override fun onCreate(db: SQLiteDatabase?) {
         val movieTable = """
@@ -87,8 +90,8 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         val myMovieDataTable = """
             CREATE TABLE my_movie_data (
                 ImdbId VARCHAR(16) PRIMARY KEY,
-                Stars INTEGER CHECK (Stars IN (1, 5)),
-                Heart BOOLEAN NOT NULL CHECK (Heart IN (0, 1)),
+                Stars INTEGER NOT NULL CHECK (Stars >= 0 AND Stars <= 5) DEFAULT 0,
+                Heart BOOLEAN NOT NULL CHECK (Heart IN (0, 1)) DEFAULT 0,
                 PlanAddDate VARCHAR(27) DEFAULT NULL,
                 HistoryAddDate VARCHAR(27) DEFAULT NULL,
                 FOREIGN KEY (ImdbId) REFERENCES movie(ImdbId)                
@@ -141,7 +144,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        if (oldVersion == 1) {
+        if (oldVersion < 2) {
             val oldMovieTable = """
                 DROP TABLE movie;
             """.trimIndent()
@@ -180,6 +183,81 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
 
             db?.execSQL(newMovieTable)
         }
+
+        if (oldVersion < 3) {
+            val renameOldMyMovieDataTable = """
+            ALTER TABLE my_movie_data 
+            RENAME TO old_my_movie_data;
+            """.trimIndent()
+
+            val newMyMovieDataTable = """
+            CREATE TABLE my_movie_data (
+                ImdbId VARCHAR(16) PRIMARY KEY,
+                Stars INTEGER CHECK ((Stars > 0 AND Stars < 6) OR Stars IS NULL) DEFAULT NULL,
+                Heart BOOLEAN NOT NULL CHECK (Heart IN (0, 1)) DEFAULT 0,
+                PlanAddDate VARCHAR(27) DEFAULT NULL,
+                HistoryAddDate VARCHAR(27) DEFAULT NULL,
+                FOREIGN KEY (ImdbId) REFERENCES movie(ImdbId)                
+            );
+            """.trimIndent()
+
+            val copyData = """
+            INSERT INTO my_movie_data
+            SELECT *
+            FROM old_my_movie_data;
+            """.trimIndent()
+
+            val dropOldTable = """
+                DROP TABLE old_my_movie_data;
+            """.trimIndent()
+
+            db?.execSQL(renameOldMyMovieDataTable)
+            db?.execSQL(newMyMovieDataTable)
+            db?.execSQL(copyData)
+            db?.execSQL(dropOldTable)
+        }
+
+        if (oldVersion < 4) {
+            val renameOldMyMovieDataTable = """
+            ALTER TABLE my_movie_data 
+            RENAME TO old_my_movie_data;
+            """.trimIndent()
+
+            val newMyMovieDataTable = """
+            CREATE TABLE my_movie_data (
+                ImdbId VARCHAR(16) PRIMARY KEY,
+                Stars INTEGER NOT NULL CHECK (Stars >= 0 AND Stars <= 5) DEFAULT 0,
+                Heart BOOLEAN NOT NULL CHECK (Heart IN (0, 1)) DEFAULT 0,
+                PlanAddDate VARCHAR(27) DEFAULT NULL,
+                HistoryAddDate VARCHAR(27) DEFAULT NULL,
+                FOREIGN KEY (ImdbId) REFERENCES movie(ImdbId)                
+            )
+        """.trimIndent()
+
+            val copyData = """
+            INSERT INTO my_movie_data (
+                Stars,
+                Heart,
+                PlanAddDate,
+                HistoryAddDate
+            )                
+            SELECT
+                IFNULL(Stars, 0),
+                Heart,
+                PlanAddDate,
+                HistoryAddDate
+            FROM old_my_movie_data;
+            """.trimIndent()
+
+            val dropOldTable = """
+                DROP TABLE old_my_movie_data;
+            """.trimIndent()
+
+            db?.execSQL(renameOldMyMovieDataTable)
+            db?.execSQL(newMyMovieDataTable)
+            db?.execSQL(copyData)
+            db?.execSQL(dropOldTable)
+        }
     }
     // endregion createAndUpdate
 
@@ -215,9 +293,9 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
 
         database.insert("movie", null, movieValues)
 
-        rawMovieData.Ratings?.let { ratings ->
+        rawMovieData.Ratings.let { ratings ->
             for (rating in ratings) {
-                rating?.let {
+                rating.let {
                     val ratingValues = ContentValues()
 
                     ratingValues.put("ImdbId", rawMovieData.imdbID)
@@ -246,6 +324,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
             }
             return rawMovieData
         }
+        movieResult.close()
         return null
     }
 
@@ -263,6 +342,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
             val rating = extractRating(ratingsResult)
             ratings.add(rating)
         }
+        ratingsResult.close()
         return ratings
     }
 
@@ -279,7 +359,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         myMovieData.planList?.let { planList ->
             myMovieDataValues.put("PlanAddDate", dateToString(planList))
         }
-        myMovieData.watchList?.let { watchList ->
+        myMovieData.historyList?.let { watchList ->
             myMovieDataValues.put("HistoryAddDate", dateToString(watchList))
         }
 
@@ -305,31 +385,49 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
 
     // region setMyMovieData
     fun setPlan(
-        addDate: Calendar,
+        addDate: Calendar?,
         imdbId: String,
     ) {
-        val calendarString = dateToString(addDate)
+        var update = ""
 
-        val update = """
+        addDate?.also { addDate ->
+            val calendarString = dateToString(addDate)
+            update = """
             UPDATE my_movie_data
-            SET PlanAddDate = $calendarString
-            WHERE ImdbId = $imdbId;
+            SET PlanAddDate = "$calendarString"
+            WHERE ImdbId = "$imdbId";
         """.trimIndent()
+        } ?: run {
+            update = """
+            UPDATE my_movie_data
+            SET PlanAddDate = NULL
+            WHERE ImdbId = "$imdbId";
+            """.trimIndent()
+        }
 
         this.writableDatabase.execSQL(update)
     }
 
     fun setHistory(
-        addDate: Calendar,
+        addDate: Calendar?,
         imdbId: String,
     ) {
-        val calendarString = dateToString(addDate)
+        var update = ""
 
-        val update = """
+        addDate?.also { addDate ->
+            val calendarString = dateToString(addDate)
+            update = """
             UPDATE my_movie_data
-            SET HistoryAddDate = $calendarString
-            WHERE ImdbId = $imdbId;
+            SET HistoryAddDate = "$calendarString"
+            WHERE ImdbId = "$imdbId";
         """.trimIndent()
+        } ?: run {
+            update = """
+            UPDATE my_movie_data
+            SET HistoryAddDate = NULL
+            WHERE ImdbId = "$imdbId";
+            """.trimIndent()
+        }
 
         this.writableDatabase.execSQL(update)
     }
@@ -338,11 +436,21 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         stars: Int,
         imdbId: String,
     ) {
-        val update = """
+        var update = ""
+
+        stars?.also { stars ->
+            update = """
             UPDATE my_movie_data
             SET Stars = $stars
-            WHERE ImdbId = $imdbId;
+            WHERE ImdbId = "$imdbId";
         """.trimIndent()
+        } ?: run {
+            update = """
+            UPDATE my_movie_data
+            SET Stars = NULL
+            WHERE ImdbId = "$imdbId";
+            """.trimIndent()
+        }
 
         this.writableDatabase.execSQL(update)
     }
@@ -351,10 +459,11 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         hasHeart: Boolean,
         imdbId: String,
     ) {
+        val heartValue = if (hasHeart) 1 else 0
         val update = """
             UPDATE my_movie_data
-            SET Heart = $hasHeart
-            WHERE ImdbId = $imdbId;
+            SET Heart = $heartValue
+            WHERE ImdbId = "$imdbId";
         """.trimIndent()
 
         this.writableDatabase.execSQL(update)
@@ -456,7 +565,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
         val conditionString = StringBuilder()
         conditionString.append("WHERE 1 = 1\n")
         for (nameBit in name.split(" ")) {
-            conditionString.append("AND Title LIKE %$nameBit%\n")
+            conditionString.append("AND Title LIKE \"%$nameBit%\"\n")
         }
         return getMovies(conditionString.toString())
     }
@@ -488,6 +597,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
                 )
             }
         }
+        results.close()
         return movies
     }
     // endregion searchMovies
@@ -532,7 +642,7 @@ class DatabaseInterface(context: Context) : SQLiteOpenHelper(context, "mymovieli
 
     private fun extractMyMovieData(cursor: Cursor): MyMovieData {
         return MyMovieData(
-            cursor.getIntOrNull(cursor.getColumnIndex("Stars")),
+            cursor.getIntOrNull(cursor.getColumnIndex("Stars")) ?: 0,
             cursor.getIntOrNull(cursor.getColumnIndex("Heart")) == 1,
             cursor.getStringOrNull(cursor.getColumnIndex("PlanAddDate"))?.let { string -> stringToDate(string) },
             cursor.getStringOrNull(cursor.getColumnIndex("HistoryAddDate"))?.let { string -> stringToDate(string) }

@@ -130,7 +130,7 @@
                         android:id="@+id/my_movie_data_display"
                         android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="46dp"
                         layout="@layout/my_movie_data_display"
                         app:layout_constraintTop_toBottomOf="@id/plot"
                         app:container="@{container}"/>

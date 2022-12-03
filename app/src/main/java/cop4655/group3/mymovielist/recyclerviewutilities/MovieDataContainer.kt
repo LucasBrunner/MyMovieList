@@ -1,18 +1,13 @@
 package cop4655.group3.mymovielist.recyclerviewutilities
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.*
 import cop4655.group3.mymovielist.data.MovieData
-import cop4655.group3.mymovielist.data.RawMovieData
 import cop4655.group3.mymovielist.database.DatabaseInterface
-import cop4655.group3.mymovielist.webapi.OmdbController
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import java.util.*
 
 class MovieDataContainer(movieData: MovieData) : ViewModel() {
     var isLoading: ObservableBoolean = ObservableBoolean(false)
@@ -27,6 +22,73 @@ class MovieDataContainer(movieData: MovieData) : ViewModel() {
         showDropDown.set(!showDropDown.get())
         if (showDropDown.get() && movieData.value?.hasFullData != true) {
             getFullData(view.context)
+        }
+        updateMovieData()
+    }
+
+    fun togglePlanList(view: View) {
+        movieData.value?.let { movieData ->
+            movieData.rawMovieData.imdbID?.let { imdbId ->
+                if (movieData.myMovieData.planList == null) {
+                    val now = Calendar.getInstance()
+                    DatabaseInterface(view.context).setPlan(now, imdbId)
+                    movieData.myMovieData.planList = now
+                    updateMovieData()
+                } else {
+                    DatabaseInterface(view.context).setPlan(null, imdbId)
+                    movieData.myMovieData.planList = null
+                    updateMovieData()
+                }
+            }
+        }
+    }
+
+    fun toggleHistoryList(view: View) {
+        movieData.value?.let { movieData ->
+            movieData.rawMovieData.imdbID?.let { imdbId ->
+                if (movieData.myMovieData.historyList == null) {
+                    val now = Calendar.getInstance()
+                    DatabaseInterface(view.context).setHistory(now, imdbId)
+                    movieData.myMovieData.historyList = now
+                    updateMovieData()
+                } else {
+                    DatabaseInterface(view.context).setHistory(null, imdbId)
+                    movieData.myMovieData.historyList = null
+                    updateMovieData()
+                }
+            }
+        }
+    }
+
+    fun toggleHeart(view: View) {
+        movieData.value?.let { movieData ->
+            movieData.rawMovieData.imdbID?.let { imdbId ->
+                if (movieData.myMovieData.heart) {
+                    DatabaseInterface(view.context).setHeart(false, imdbId)
+                    movieData.myMovieData.heart = false
+                    updateMovieData()
+                } else {
+                    DatabaseInterface(view.context).setHeart(true, imdbId)
+                    movieData.myMovieData.heart = true
+                    updateMovieData()
+                }
+            }
+        }
+    }
+
+    fun setStarCount(view: View, starPosition: Int) {
+        movieData.value?.let { movieData ->
+            movieData.rawMovieData.imdbID?.let { imdbId ->
+                if (movieData.myMovieData.stars == starPosition) {
+                    DatabaseInterface(view.context).setRating(0, imdbId)
+                    movieData.myMovieData.stars = 0
+                    updateMovieData()
+                } else {
+                    DatabaseInterface(view.context).setRating(starPosition, imdbId)
+                    movieData.myMovieData.stars = starPosition
+                    updateMovieData()
+                }
+            }
         }
     }
 
