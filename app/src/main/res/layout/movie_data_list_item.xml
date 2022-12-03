@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="@{container.movieData.plot}"
+                    android:text="@{container.movieData.rawMovieData.plot}"
                     android:textSize="18sp"
                     android:visibility="@{container.isLoading ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toBottomOf="@+id/addToMovieHistoryButton"
