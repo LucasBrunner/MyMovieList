@@ -12,4 +12,7 @@
     <color name="transparent">#00000000</color>
     <color name="heart_pink">#fc4bcd</color>
     <color name="star_yellow">#f2d100</color>
+    <color name="cyan">#00FFFF</color>
+    <color name="green">#00FF00</color>
+    <color name="yellow">#FFFF00</color>
 </resources>

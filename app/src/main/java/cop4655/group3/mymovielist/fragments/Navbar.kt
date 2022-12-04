@@ -26,7 +26,7 @@ class Navbar(private val main: MainActivity) : Fragment() {
         binding.planButton.setOnClickListener{ main.changeFragment(MainActivity.MovieFragment.PLAN) }
         binding.heartedButton.setOnClickListener{ main.changeFragment(MainActivity.MovieFragment.HEARTED) }
 
-        binding.searchButton.setColorFilter(R.color.grey)
+        binding.searchButton.setColorFilter(Color.rgb(0,255,255))
 
         return binding.root;
     }
@@ -34,28 +34,28 @@ class Navbar(private val main: MainActivity) : Fragment() {
     fun updateTint(fragment: MainActivity.MovieFragment) {
         when(fragment) {
             MainActivity.MovieFragment.SEARCH -> {
-                binding.searchButton.setColorFilter(Color.GRAY)
+                binding.searchButton.setColorFilter(Color.rgb(0,255,255))
                 binding.historyButton.clearColorFilter()
                 binding.planButton.clearColorFilter()
                 binding.heartedButton.clearColorFilter()
             }
             MainActivity.MovieFragment.HISTORY -> {
                 binding.searchButton.clearColorFilter()
-                binding.historyButton.setColorFilter(Color.GRAY)
+                binding.historyButton.setColorFilter(Color.GREEN)
                 binding.planButton.clearColorFilter()
                 binding.heartedButton.clearColorFilter()
             }
             MainActivity.MovieFragment.PLAN -> {
                 binding.searchButton.clearColorFilter()
                 binding.historyButton.clearColorFilter()
-                binding.planButton.setColorFilter(Color.GRAY)
+                binding.planButton.setColorFilter(Color.rgb(242, 209, 0))
                 binding.heartedButton.clearColorFilter()
             }
             MainActivity.MovieFragment.HEARTED -> {
                 binding.searchButton.clearColorFilter()
                 binding.historyButton.clearColorFilter()
                 binding.planButton.clearColorFilter()
-                binding.heartedButton.setColorFilter(Color.GRAY)
+                binding.heartedButton.setColorFilter(Color.rgb(252,75,205))
             }
         }
     }

@@ -3,13 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ascending_toggle_icon.xml" value="0.213" />
-        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.2035" />
-        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_arrow_downward_24.xml" value="0.213" />
+        <entry key="..\:/Users/aleva/Desktop/MyMovieList/app/src/main/res/layout/activity_main.xml" value="0.1884498480243161" />
+        <entry key="..\:/Users/aleva/Desktop/MyMovieList/app/src/main/res/layout/fragment_movie_plan.xml" value="0.3875" />
+        <entry key="..\:/Users/aleva/Desktop/MyMovieList/app/src/main/res/layout/fragment_movie_search.xml" value="0.1884498480243161" />
+        <entry key="..\:/Users/aleva/Desktop/MyMovieList/app/src/main/res/layout/fragment_movie_sort_list.xml" value="0.1884498480243161" />
+        <entry key="..\:/Users/aleva/Desktop/MyMovieList/app/src/main/res/layout/fragment_navbar.xml" value="0.1" />
+        <entry key="..\:/Users/aleva/Desktop/MyMovieList/app/src/main/res/layout/movie_data_list_item.xml" value="0.1" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.1485" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_arrow_drop_up_24.xml" value="0.1485" />
-        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_arrow_upward_24.xml" value="0.213" />
-        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2035" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_list_alt_24.xml" value="0.1485" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2005" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/drawable/ic_baseline_star_24.xml" value="0.1485" />
@@ -22,12 +23,9 @@
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_plan.xml" value="0.30520833333333336" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_search.xml" value="0.2953125" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_search2.xml" value="0.278125" />
-        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_movie_sort_list.xml" value="0.33" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/fragment_navbar.xml" value="0.3319746376811594" />
-        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/movie_data_list_item.xml" value="0.33" />
+        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/movie_data_list_item.xml" value="0.30416666666666664" />
         <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/movie_info.xml" value="0.278125" />
-        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/my_movie_data_display.xml" value="0.33" />
-        <entry key="..\:/Users/three/AndroidStudioProjects/MyMovieList/app/src/main/res/layout/rating_star.xml" value="0.4010416666666667" />
       </map>
     </option>
   </component>

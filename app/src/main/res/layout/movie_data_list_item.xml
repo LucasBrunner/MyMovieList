@@ -140,7 +140,7 @@
                             android:layout_height="36dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_baseline_access_time_24"
-                            android:tint="@{container.movieData.myMovieData.planList != null ? @color/black : @color/grey}"
+                            android:tint="@{container.movieData.myMovieData.planList != null ? @color/star_yellow : @color/grey}"
                             android:onClick="@{(view) -> container.togglePlanList(view)}"
                             android:background="?selectableItemBackgroundBorderless" />
 
@@ -150,8 +150,8 @@
                             android:layout_height="36dp"
                             android:layout_marginHorizontal="5dp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ic_baseline_list_alt_24"
-                            android:tint="@{container.movieData.myMovieData.historyList != null ? @color/black : @color/grey}"
+                            android:src="@drawable/ic_baseline_playlist_add_check_24"
+                            android:tint="@{container.movieData.myMovieData.historyList != null ? @color/green : @color/grey}"
                             android:onClick="@{(view) -> container.toggleHistoryList(view)}"
                             android:background="?selectableItemBackgroundBorderless" />
 
