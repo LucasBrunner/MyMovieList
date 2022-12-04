@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Sort order:"
-            android:textSize="24sp"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,8 +28,8 @@
             android:id="@+id/sortSelector"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="10dp"
             android:entries="@array/sort_methods"
+            android:layout_marginTop="3dp"
             app:layout_constraintStart_toEndOf="@id/sortText"
             app:layout_constraintEnd_toStartOf="@id/sortOrderToggle"
             app:layout_constraintBottom_toBottomOf="parent"

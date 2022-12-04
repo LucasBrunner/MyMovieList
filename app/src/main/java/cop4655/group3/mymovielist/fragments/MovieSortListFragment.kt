@@ -27,12 +27,16 @@ class MovieSortListFragment(
         HEARTED,
     }
 
-    enum class SortMethod {
-        TITLE,
-        STARS,
-        DATE_ADDED,
-        METASCORE,
-        RELEASE_YEAR,
+    enum class SortMethod(val s: String) {
+        TITLE("Title"),
+        STARS("Your rating"),
+        DATE_ADDED("Date added"),
+        METASCORE("Metascore"),
+        RELEASE_YEAR("Release year");
+
+        override fun toString(): String {
+            return s
+        }
     }
 
     private var binding: FragmentMovieSortListBinding? = null

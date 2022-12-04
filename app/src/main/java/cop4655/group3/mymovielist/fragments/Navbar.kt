@@ -1,5 +1,6 @@
 package cop4655.group3.mymovielist.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -33,28 +34,28 @@ class Navbar(private val main: MainActivity) : Fragment() {
     fun updateTint(fragment: MainActivity.MovieFragment) {
         when(fragment) {
             MainActivity.MovieFragment.SEARCH -> {
-                binding.searchButton.setColorFilter(R.color.grey)
+                binding.searchButton.setColorFilter(Color.GRAY)
                 binding.historyButton.clearColorFilter()
                 binding.planButton.clearColorFilter()
                 binding.heartedButton.clearColorFilter()
             }
             MainActivity.MovieFragment.HISTORY -> {
                 binding.searchButton.clearColorFilter()
-                binding.historyButton.setColorFilter(R.color.grey)
+                binding.historyButton.setColorFilter(Color.GRAY)
                 binding.planButton.clearColorFilter()
                 binding.heartedButton.clearColorFilter()
             }
             MainActivity.MovieFragment.PLAN -> {
                 binding.searchButton.clearColorFilter()
                 binding.historyButton.clearColorFilter()
-                binding.planButton.setColorFilter(R.color.grey)
+                binding.planButton.setColorFilter(Color.GRAY)
                 binding.heartedButton.clearColorFilter()
             }
             MainActivity.MovieFragment.HEARTED -> {
                 binding.searchButton.clearColorFilter()
                 binding.historyButton.clearColorFilter()
                 binding.planButton.clearColorFilter()
-                binding.heartedButton.setColorFilter(R.color.grey)
+                binding.heartedButton.setColorFilter(Color.GRAY)
             }
         }
     }
